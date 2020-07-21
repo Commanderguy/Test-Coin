@@ -12,5 +12,6 @@ namespace Test_Coin
         public const long initialDifficulty = 4;
         public const long InitialCoinPerBlock = 50;
         public const long MaxTransactionsPerBlock = 50;
+        public const long MaxMessageSize = 256;
     }
 }
