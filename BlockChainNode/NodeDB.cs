@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Test_Coin;
 
 namespace BlockChainNode
 {
@@ -27,12 +28,14 @@ namespace BlockChainNode
             shuffeled_nodes = new Stack<string>( KnownNodes.OrderBy(x => rand.Next()).ToList());
         }
 
+        private Blockchain _chain;
 
         /// <summary>
         /// Lookup all nodes in the database
         /// </summary>
-        public void Lookup()
+        public void Lookup(Test_Coin.Blockchain chain)
         {
+            _chain = chain;
             for(; ; )
             {
                 while(shuffeled_nodes.Count != 0)
@@ -48,8 +51,9 @@ namespace BlockChainNode
         {
             TcpClient client = new TcpClient(hostname, 8080);
             var stream = client.GetStream();
-            byte[] greeting = ASCIIEncoding.ASCII.GetBytes("NODE EXCHANGE v1");
+            byte[] greeting = ASCIIEncoding.ASCII.GetBytes("NODE EXCHANGE v1;ChainSize: " + _chain.chain.Count.ToString() + ";NodeAdress: " + Node.GetLoacalIp().ToString());
             stream.Write( greeting, 0, greeting.Length );
+            
         }
 
 

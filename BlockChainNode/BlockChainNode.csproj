@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MissingBlockPart.cs" />
     <Compile Include="NodeDB.cs" />
     <Compile Include="Sender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +52,12 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="ThreeHandshake.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">
+      <Project>{61ba1a19-cefd-45a2-a3cd-b61c6b41635e}</Project>
+      <Name>CoinFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

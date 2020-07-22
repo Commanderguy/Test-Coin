@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Test_Coin;
 
 namespace BlockChainNode
 {
@@ -33,14 +35,17 @@ namespace BlockChainNode
         TcpListener Listener = new TcpListener( GetLoacalIp(), 8080);
 
 
-        public Node()
+        public Node(Blockchain ch)
         {
             Listener.Start();
             Thread th = new Thread(LoopListen);
             th.Start();
+            _chain = ch;
         }
 
         public bool stop = false;
+
+        Blockchain _chain;
 
         private void LoopListen()
         {
@@ -50,26 +55,43 @@ namespace BlockChainNode
                 // Listen to tcp clients and process them.
                 TcpClient client = Listener.AcceptTcpClient();
                 var stream = client.GetStream();
-                
-                int i = 0;
-                while((i = stream.Read(buf, 0, buf.Length)) != 0)
+
+                int i = stream.Read(buf, 0, buf.Length);
+                if (i == 0)
                 {
-                    string data = System.Text.Encoding.ASCII.GetString(buf, 0, i);
-                    var SendBack = ASCIIEncoding.ASCII.GetBytes(_FuncAssociates[data]());
-                    stream.Write(SendBack, 0, SendBack.Length);
+                    client.Close();
+                    continue;
                 }
+                string msgClient = ASCIIEncoding.ASCII.GetString(buf, 0, i);
+                if(!msgClient.Contains("NODE EXCHANGE v1; ChainSize: ") && !msgClient.Contains(";NodeAdress:"))
+                {
+                    var n = ASCIIEncoding.ASCII.GetBytes("WRONG CHAIN FORMAT;STOPPING CONNECTION");
+                    stream.Write(n, 0, n.Length );
+                    client.Close();
+                    continue;
+                }
+
+                int ChainSize = Convert.ToInt32( msgClient.Substring(29, msgClient.IndexOf(";NodeAdress")));
+                if(ChainSize <= _chain.chain.Count )
+                {
+                    byte[] answer = SendMissingBlockchain(ChainSize);
+                    stream.Write(answer, 0, answer.Length);
+                }
+
+
                 client.Close();
             }
         }
 
-        public void AddAction(string name, Func<string> function)
+        private byte[] SendMissingBlockchain(int startpoint)
         {
-            _FuncAssociates.Add(name, function);
+            MissingBlockPart part = new MissingBlockPart();
+            for(int i = startpoint; i < _chain.chain.Count; i++)
+            {
+                part.AddBlock(_chain.chain[i]);
+            }
+            return ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(part));
         }
-
-
-        Dictionary<string, Func<string>> _FuncAssociates = new Dictionary<string, Func<string>>();
-
 
         ~Node()
         {

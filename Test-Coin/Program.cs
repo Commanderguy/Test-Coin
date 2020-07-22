@@ -25,6 +25,9 @@ namespace Test_Coin
             }
 
 
+            BlockChainNode.Node node = new BlockChainNode.Node(chain);
+
+            
 
             Block b = new Block();
             b.AddTransaction(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 }, new byte[] { 4, 4, 4, 4, 2, 21 }, 50);

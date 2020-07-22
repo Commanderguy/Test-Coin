@@ -26,24 +26,11 @@ namespace Test_Coin
             double start = 0;
             foreach(var bx in chain)
             {
-                Console.Write("Testing if ");
-                foreach (var n in address)
-                    Console.Write(n);
-                Console.Write(" is equal to ");
-                foreach (var n in bx.miner)
-                    Console.Write(n);
-                
-
-
                 if (Enumerable.SequenceEqual(address, bx.miner))
                 {
                     start += Environment.InitialCoinPerBlock / ((bx.block_number / Environment.diffReducer) + 1);
-                    Console.WriteLine("\nIf yes, this message should be visible");
                 }
-                else
-                {
-                    Console.WriteLine("\nIf it is not equal, you should see this");
-                }
+                
                 foreach (var tx in bx.transactions)
                 {
                     if(Enumerable.SequenceEqual(address, tx.receiver))
