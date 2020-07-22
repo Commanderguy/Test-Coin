@@ -44,14 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MissingBlockPart.cs" />
     <Compile Include="NodeDB.cs" />
     <Compile Include="Sender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="ThreeHandshake.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">

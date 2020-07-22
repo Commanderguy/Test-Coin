@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace BlockChainNode
             if (File.Exists(nodeFile))
                 KnownNodes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(nodeFile);
             else
-                throw new FileNotFoundException("Node db not found", nodeFile);
+                KnownNodes = new List<string>();
             rand = new Random(DateTime.Now.Millisecond * KnownNodes.Count);
             shuffeled_nodes = new Stack<string>( KnownNodes.OrderBy(x => rand.Next()).ToList());
         }
@@ -33,9 +34,9 @@ namespace BlockChainNode
         /// <summary>
         /// Lookup all nodes in the database
         /// </summary>
-        public void Lookup(Test_Coin.Blockchain chain)
+        public void Lookup(object chain)
         {
-            _chain = chain;
+            _chain = (Test_Coin.Blockchain)chain;
             for(; ; )
             {
                 while(shuffeled_nodes.Count != 0)
@@ -45,16 +46,58 @@ namespace BlockChainNode
                 shuffeled_nodes = new Stack<string>(KnownNodes.OrderBy(x => rand.Next()).ToList());
             }
         }
+        
 
-
-        private void connect_to_node(string hostname)
+        public void connect_to_node(string hostname)
         {
             TcpClient client = new TcpClient(hostname, 8080);
-            var stream = client.GetStream();
-            byte[] greeting = ASCIIEncoding.ASCII.GetBytes("NODE EXCHANGE v1;ChainSize: " + _chain.chain.Count.ToString() + ";NodeAdress: " + Node.GetLoacalIp().ToString());
-            stream.Write( greeting, 0, greeting.Length );
-            
+            if (getNodes(client.GetStream()))
+                TryGetChain(client.GetStream());
+
         }
+
+
+        public bool getNodes(NetworkStream stream)
+        {
+            try
+            {
+                byte[] Greeting = ASCIIEncoding.ASCII.GetBytes("COINP2PNODEEXCHANGE;" + Node.GetLoacalIp().ToString());
+                stream.Write(Greeting, 0, Greeting.Length);
+                byte[] gainedNodes = new byte[65536];
+                var i = stream.Read(gainedNodes, 0, gainedNodes.Length);
+
+                string Nodes = ASCIIEncoding.ASCII.GetString(gainedNodes, 0, i);
+                NodeDB _GainedDb = JsonConvert.DeserializeObject<NodeDB>(Nodes);
+            }catch(System.Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        public void TryGetChain(NetworkStream stream)
+        {
+            byte[] Greeting = ASCIIEncoding.ASCII.GetBytes("COINP2PCHAIN;" + _chain.chain.Count);
+            stream.Write(Greeting, 0, Greeting.Length);
+            byte[] recBlock = new byte[65536];
+            stream.Read(recBlock, 0, recBlock.Length);
+            bool placebo = false;
+            while(ASCIIEncoding.ASCII.GetString(recBlock) != "ENDOFCHAIN")
+            {
+                if (placebo) continue;
+                Block b = JsonConvert.DeserializeObject<Block>(ASCIIEncoding.ASCII.GetString(recBlock));
+                if (b.isValid(b.block_number))
+                {
+                    _chain.AddBlock(b);
+                }else
+                {
+                    placebo = true;
+                    
+                }
+            }
+        }
+
 
 
         /// <summary>
@@ -62,7 +105,7 @@ namespace BlockChainNode
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        private bool processNewNode(string hostname)
+        public bool processNewNode(string hostname)
         {
             if (KnownNodes.Contains(hostname)) return false;
             if (hostname == Node.GetLoacalIp().ToString()) return false;

@@ -34,18 +34,25 @@ namespace BlockChainNode
 
         TcpListener Listener = new TcpListener( GetLoacalIp(), 8080);
 
-
-        public Node(Blockchain ch)
+        NodeDB _db;
+        Thread th;
+        public Node(Blockchain ch, NodeDB db)
         {
             Listener.Start();
-            Thread th = new Thread(LoopListen);
+            th = new Thread(LoopListen);
             th.Start();
             _chain = ch;
+            _db = db;
         }
 
         public bool stop = false;
 
         Blockchain _chain;
+
+        public void stopThread()
+        {
+            th.Abort();
+        }
 
         private void LoopListen()
         {
@@ -56,42 +63,40 @@ namespace BlockChainNode
                 TcpClient client = Listener.AcceptTcpClient();
                 var stream = client.GetStream();
 
-                int i = stream.Read(buf, 0, buf.Length);
-                if (i == 0)
-                {
-                    client.Close();
-                    continue;
-                }
-                string msgClient = ASCIIEncoding.ASCII.GetString(buf, 0, i);
-                if(!msgClient.Contains("NODE EXCHANGE v1; ChainSize: ") && !msgClient.Contains(";NodeAdress:"))
-                {
-                    var n = ASCIIEncoding.ASCII.GetBytes("WRONG CHAIN FORMAT;STOPPING CONNECTION");
-                    stream.Write(n, 0, n.Length );
-                    client.Close();
-                    continue;
-                }
+                var i = stream.Read(buf, 0, buf.Length);
+                string msg = ASCIIEncoding.ASCII.GetString(buf, 0, i);
 
-                int ChainSize = Convert.ToInt32( msgClient.Substring(29, msgClient.IndexOf(";NodeAdress")));
-                if(ChainSize <= _chain.chain.Count )
-                {
-                    byte[] answer = SendMissingBlockchain(ChainSize);
+                if (msg.Contains("COINP2PNODEEXCHANGE;"))
+                { 
+                    var answer = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_db));
+                    var ip = msg.Replace("COINP2PNODEEXCHANGE;", "");
+                    _db.processNewNode(ip);
                     stream.Write(answer, 0, answer.Length);
+                }else if(msg.Contains("COINP2PCHAIN;"))
+                {
+                    msg = msg.Replace("COINP2PCHAIN;", "");
+                    if(Convert.ToInt32(msg) >= _chain.chain.Count)
+                    {
+                        Console.WriteLine("Clients size is equal or bigger");
+                        var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
+                        stream.Write(WriteBuf, 0, WriteBuf.Length);
+                    }
+                    else
+                    {
+                        for(int b = Convert.ToInt32(msg); b < _chain.chain.Count; b++)
+                        {
+                            var writebuf = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_chain.chain[b]));
+                            stream.Write(writebuf, 0, writebuf.Length);
+                        }
+                        var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
+                        stream.Write(WriteBuf, 0, WriteBuf.Length);
+                    }
                 }
-
 
                 client.Close();
             }
         }
 
-        private byte[] SendMissingBlockchain(int startpoint)
-        {
-            MissingBlockPart part = new MissingBlockPart();
-            for(int i = startpoint; i < _chain.chain.Count; i++)
-            {
-                part.AddBlock(_chain.chain[i]);
-            }
-            return ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(part));
-        }
 
         ~Node()
         {
