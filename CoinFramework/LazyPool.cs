@@ -13,7 +13,7 @@ namespace Test_Coin
     /// </summary>
     public class LazyPool
     {
-        Stack st = new Stack();
+        Stack<Transaction> st = new Stack<Transaction>();
 
         public LazyPool(Transaction tx)
         {

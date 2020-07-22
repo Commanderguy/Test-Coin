@@ -16,7 +16,7 @@ namespace BlockChainNode
         /// Retrieve the IP of the user.
         /// </summary>
         /// <returns></returns>
-        static IPAddress GetLoacalIp()
+        public static IPAddress GetLoacalIp()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
@@ -54,9 +54,11 @@ namespace BlockChainNode
                 int i = 0;
                 while((i = stream.Read(buf, 0, buf.Length)) != 0)
                 {
-
+                    string data = System.Text.Encoding.ASCII.GetString(buf, 0, i);
+                    var SendBack = ASCIIEncoding.ASCII.GetBytes(_FuncAssociates[data]());
+                    stream.Write(SendBack, 0, SendBack.Length);
                 }
-
+                client.Close();
             }
         }
 
@@ -67,5 +69,11 @@ namespace BlockChainNode
 
 
         Dictionary<string, Func<string>> _FuncAssociates = new Dictionary<string, Func<string>>();
+
+
+        ~Node()
+        {
+            Listener.Stop();
+        }
     }
 }

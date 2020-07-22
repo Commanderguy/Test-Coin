@@ -8,4 +8,4 @@ the other or not, if the hashes are not equal.
 The teacher will now send all blocks after the end of the students chain to the student. The student then verifies each of the blocks. T´hen it responds true, if all 
 blocks are valid. He should now have the same blockchain as the teacher.
 ## Step number three:
-Exchange node list. Both nodes exchange a list of all nodes the know, so nodes can find new nodes.
+Exchange node list and Lazypool. Both nodes exchange a list of all nodes they know, so nodes can find new nodes and the lazy pool to be up to date.

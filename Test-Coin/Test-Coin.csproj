@@ -38,12 +38,7 @@
     <None Include="ThreeHandshake.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="Blockchain.cs" />
-    <Compile Include="Environment.cs" />
-    <Compile Include="LazyPool.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -58,6 +53,16 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlockChainNode\BlockChainNode.csproj">
+      <Project>{ed9478c9-1d5d-4d7e-a86e-e38ddb867089}</Project>
+      <Name>BlockChainNode</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">
+      <Project>{61ba1a19-cefd-45a2-a3cd-b61c6b41635e}</Project>
+      <Name>CoinFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
