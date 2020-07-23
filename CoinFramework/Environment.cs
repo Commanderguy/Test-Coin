@@ -13,5 +13,6 @@ namespace Test_Coin
         public const long InitialCoinPerBlock = 50;
         public const long MaxTransactionsPerBlock = 5000;
         public const long MaxMessageSize = 256;
+        public const int TimeBetweenNodeConnections = 10000;
     }
 }

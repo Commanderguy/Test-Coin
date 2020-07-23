@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Test_Coin;
 
@@ -39,14 +40,17 @@ namespace BlockChainNode
         /// </summary>
         public void Lookup(object chain)
         {
+            Console.WriteLine("Started looping");
             _chain = (Test_Coin.Blockchain)chain;
             for(; ; )
             {
+                Console.WriteLine(shuffeled_nodes.Count + " nodes left");
                 while(shuffeled_nodes.Count != 0)
                 {
                     connect_to_node(shuffeled_nodes.Pop());
                 }
                 shuffeled_nodes = new Stack<string>(KnownNodes.OrderBy(x => rand.Next()).ToList());
+                Thread.Sleep(Test_Coin.Environment.TimeBetweenNodeConnections);
             }
         }
         
@@ -54,6 +58,7 @@ namespace BlockChainNode
         public void connect_to_node(string hostname)
         {
             TcpClient client = new TcpClient(hostname, 8080);
+            Console.WriteLine("Found node");
             if (getNodes(client.GetStream()))
                 TryGetChain(client.GetStream());
 
