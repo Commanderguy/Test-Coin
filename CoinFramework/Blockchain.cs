@@ -56,7 +56,7 @@ namespace Test_Coin
             chain.Add(b);
         }
 
-        
+        public Blockchain() { }
 
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Test_Coin
@@ -60,17 +61,23 @@ namespace Test_Coin
             hash = SHA512.Create().ComputeHash(ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num))));
         }
 
+        public Transaction() { }
+
         public void SendTransaction(List<string> txs)
         {
-            var NEWTRANSACTION = this;
-            foreach(var n in txs)
+            Thread th = new Thread(() =>
             {
-                TcpClient client = new TcpClient(n, 8080);
-                var stream = client.GetStream();
-                var send = ASCIIEncoding.ASCII.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(NEWTRANSACTION));
-                stream.Write(send, 0, send.Length);
-                client.Close();
-            }
+                var NEWTRANSACTION = this;
+                foreach (var n in txs)
+                {
+                    TcpClient client = new TcpClient(n, 8080);
+                    var stream = client.GetStream();
+                    var send = ASCIIEncoding.ASCII.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(NEWTRANSACTION));
+                    stream.Write(send, 0, send.Length);
+                    client.Close();
+                }
+            });
+            th.Start();
         }
 
 

@@ -14,7 +14,7 @@ namespace BlockChainNode
     
     public class NodeDB
     {
-        List<string> KnownNodes = new List<string>();
+        public List<string> KnownNodes = new List<string>();
 
         public LazyPool pool = new LazyPool();
 
@@ -40,17 +40,23 @@ namespace BlockChainNode
         /// </summary>
         public void Lookup(object chain)
         {
-            Console.WriteLine("Started looping");
-            _chain = (Test_Coin.Blockchain)chain;
-            for(; ; )
+            try
             {
-                Console.WriteLine(shuffeled_nodes.Count + " nodes left");
-                while(shuffeled_nodes.Count != 0)
+                Console.WriteLine("Started looping");
+                _chain = (Test_Coin.Blockchain)chain;
+                for (; ; )
                 {
-                    connect_to_node(shuffeled_nodes.Pop());
+                    Console.WriteLine(shuffeled_nodes.Count + " nodes left");
+                    while (shuffeled_nodes.Count != 0)
+                    {
+                        connect_to_node(shuffeled_nodes.Pop());
+                    }
+                    shuffeled_nodes = new Stack<string>(KnownNodes.OrderBy(x => rand.Next()).ToList());
+                    Thread.Sleep(Test_Coin.Environment.TimeBetweenNodeConnections);
                 }
-                shuffeled_nodes = new Stack<string>(KnownNodes.OrderBy(x => rand.Next()).ToList());
-                Thread.Sleep(Test_Coin.Environment.TimeBetweenNodeConnections);
+            }catch(Exception e)
+            {
+                return;
             }
         }
         
@@ -126,6 +132,9 @@ namespace BlockChainNode
             shuffeled_nodes.Push(hostname);
             return true;
         }
+
+
+        
 
     }
 }

@@ -56,47 +56,55 @@ namespace BlockChainNode
 
         private void LoopListen()
         {
-            byte[] buf = new byte[256];
-            while (!stop)
+            try
             {
-                // Listen to tcp clients and process them.
-                TcpClient client = Listener.AcceptTcpClient();
-                var stream = client.GetStream();
-
-                var i = stream.Read(buf, 0, buf.Length);
-                string msg = ASCIIEncoding.ASCII.GetString(buf, 0, i);
-
-                if (msg.Contains("COINP2PNODEEXCHANGE;"))
-                { 
-                    var answer = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_db));
-                    var ip = msg.Replace("COINP2PNODEEXCHANGE;", "");
-                    _db.processNewNode(ip);
-                    stream.Write(answer, 0, answer.Length);
-                }else if(msg.Contains("COINP2PCHAIN;"))
+                byte[] buf = new byte[256];
+                while (!stop)
                 {
-                    msg = msg.Replace("COINP2PCHAIN;", "");
-                    if(Convert.ToInt32(msg) >= _chain.chain.Count)
+                    // Listen to tcp clients and process them.
+                    TcpClient client = Listener.AcceptTcpClient();
+                    var stream = client.GetStream();
+
+                    var i = stream.Read(buf, 0, buf.Length);
+                    string msg = ASCIIEncoding.ASCII.GetString(buf, 0, i);
+
+                    if (msg.Contains("COINP2PNODEEXCHANGE;"))
                     {
-                        Console.WriteLine("Clients size is equal or bigger");
-                        var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
-                        stream.Write(WriteBuf, 0, WriteBuf.Length);
+                        var answer = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_db));
+                        var ip = msg.Replace("COINP2PNODEEXCHANGE;", "");
+                        _db.processNewNode(ip);
+                        stream.Write(answer, 0, answer.Length);
                     }
-                    else
+                    else if (msg.Contains("COINP2PCHAIN;"))
                     {
-                        for(int b = Convert.ToInt32(msg); b < _chain.chain.Count; b++)
+                        msg = msg.Replace("COINP2PCHAIN;", "");
+                        if (Convert.ToInt32(msg) >= _chain.chain.Count)
                         {
-                            var writebuf = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_chain.chain[b]));
-                            stream.Write(writebuf, 0, writebuf.Length);
+                            Console.WriteLine("Clients size is equal or bigger");
+                            var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
+                            stream.Write(WriteBuf, 0, WriteBuf.Length);
                         }
-                        var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
-                        stream.Write(WriteBuf, 0, WriteBuf.Length);
+                        else
+                        {
+                            for (int b = Convert.ToInt32(msg); b < _chain.chain.Count; b++)
+                            {
+                                var writebuf = ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(_chain.chain[b]));
+                                stream.Write(writebuf, 0, writebuf.Length);
+                            }
+                            var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
+                            stream.Write(WriteBuf, 0, WriteBuf.Length);
+                        }
                     }
-                }else if(msg.Contains("NEWTRANSACTION"))
-                {
-                    _db.pool.addTx(Newtonsoft.Json.JsonConvert.DeserializeObject<Transaction>(msg));
-                }
+                    else if (msg.Contains("NEWTRANSACTION"))
+                    {
+                        _db.pool.addTx(Newtonsoft.Json.JsonConvert.DeserializeObject<Transaction>(msg));
+                    }
 
-                client.Close();
+                    client.Close();
+                }
+            }catch(Exception e)
+            {
+                return;
             }
         }
 

@@ -5,8 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Coin_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Löffelcoin client" Height="450" Width="800" Closed="Window_Closed" Closing="Window_Closing">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Row="0" x:Name="AccountList">
+            <Label Content="Accounts: " FontSize="40" />
+
+            <Button x:Name="AddAccount" Content="Add Account" Margin="5" Click="AddAccount_Click"  />
+        </StackPanel>
+        <Button Content="Mine block" FontSize="20" Grid.Column="1" HorizontalAlignment="Left" Margin="178,50,0,0" VerticalAlignment="Top" Width="204" Height="43" Click="Button_Click_2"/>
+
+
+        <TextBlock x:Name="statBar" Grid.Column="1" HorizontalAlignment="Left" Margin="389,10,0,0" TextWrapping="Wrap" Text="Status" VerticalAlignment="Top" Width="201"/>
+        <Label x:Name="UpBar" Content="Miner is idle" Grid.Column="1" HorizontalAlignment="Left" Margin="178,108,0,0" VerticalAlignment="Top" Width="204"/>
+        <TextBox x:Name="GetRecSAddr" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="46,162,0,0" TextWrapping="Wrap" Text="Insert address" VerticalAlignment="Top" Width="497"/>
+        <TextBox x:Name="ValueBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="225,228,0,0" TextWrapping="Wrap" Text="Value" VerticalAlignment="Top" Width="120" TextChanged="ValueBox_TextChanged"/>
+        <Label Content="Value:" Grid.Column="1" HorizontalAlignment="Left" Margin="177,224,0,0" VerticalAlignment="Top" Height="30" Width="43"/>
+        <Label Content="Address:" Grid.Column="1" HorizontalAlignment="Left" Margin="46,136,0,0" VerticalAlignment="Top" Height="26" Width="56"/>
+        <Button Content="Send Löffelcoins to user" Grid.Column="1" HorizontalAlignment="Left" Margin="156,292,0,0" VerticalAlignment="Top" Width="248" Height="44" Click="Button_Click_1"/>
+
+
+        <Rectangle x:Name="blackFill" Fill="Black" Grid.RowSpan="3" Grid.ColumnSpan="3" Opacity="0" Visibility="Hidden" />
+
+        <Rectangle x:Name="WhiteFill" Fill="White" Grid.ColumnSpan="2" Margin="90, 70, 90, 100" Visibility="Hidden" />
+
+
+        <Label x:Name="_visi_titleLabel" Visibility="Hidden" Grid.ColumnSpan="2" Content="Add new account" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 0, 200" FontSize="40" ></Label>
+        <Label x:Name="_visi_nameLabel" Visibility="Hidden" Grid.ColumnSpan="2" Content="Name: " HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10, 10, 400, 10" FontSize="30" />
+        <TextBox x:Name="_visi_inText" Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Left"  Height="24" Margin="61,203,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="405" TextChanged="TextBox_TextChanged"/>
+        <Button x:Name="subButton" Visibility="Hidden" Content="Submit" Grid.Column="1" HorizontalAlignment="Left" Margin="156,251,0,0" VerticalAlignment="Top" Width="162" Height="41" Click="Button_Click"/>
+        <Label x:Name="Balance" Content="0,0" Grid.Column="1" HorizontalAlignment="Left" Margin="426,60,0,0" VerticalAlignment="Top" Width="117"/>
+
+
     </Grid>
 </Window>
