@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainNode", "BlockChai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinFramework", "CoinFramework\CoinFramework.csproj", "{61BA1A19-CEFD-45A2-A3CD-B61C6B41635E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coin-UI", "Coin-UI\Coin-UI.csproj", "{5E7BBCA9-678C-428E-8D06-BEFE50384F43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{61BA1A19-CEFD-45A2-A3CD-B61C6B41635E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61BA1A19-CEFD-45A2-A3CD-B61C6B41635E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61BA1A19-CEFD-45A2-A3CD-B61C6B41635E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E7BBCA9-678C-428E-8D06-BEFE50384F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E7BBCA9-678C-428E-8D06-BEFE50384F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E7BBCA9-678C-428E-8D06-BEFE50384F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E7BBCA9-678C-428E-8D06-BEFE50384F43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

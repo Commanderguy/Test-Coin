@@ -91,6 +91,9 @@ namespace BlockChainNode
                         var WriteBuf = ASCIIEncoding.ASCII.GetBytes("ENDOFCHAIN");
                         stream.Write(WriteBuf, 0, WriteBuf.Length);
                     }
+                }else if(msg.Contains("NEWTRANSACTION"))
+                {
+                    _db.pool.addTx(Newtonsoft.Json.JsonConvert.DeserializeObject<Transaction>(msg));
                 }
 
                 client.Close();

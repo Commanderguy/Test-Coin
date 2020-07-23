@@ -15,6 +15,8 @@ namespace BlockChainNode
     {
         List<string> KnownNodes = new List<string>();
 
+        public LazyPool pool = new LazyPool();
+
         Stack<string> shuffeled_nodes = new Stack<string>();
         Random rand;
         string _file;

@@ -40,10 +40,7 @@ namespace Test_Coin
             AccountView view = new AccountView();
 
             Block nullBlock = new Block();
-            nullBlock.block_number = 0;
-            nullBlock.mined = false;
-            nullBlock.miner = view.publicKey;
-            nullBlock.prev_hash = new byte[] { 0, 0, 0, 0 };
+            
 
             nullBlock.calculateNonce(view.publicKey);
 

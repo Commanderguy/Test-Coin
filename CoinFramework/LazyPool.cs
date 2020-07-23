@@ -35,5 +35,13 @@ namespace Test_Coin
             
         }
 
+
+        public bool addTx(Transaction t)
+        {
+            if (st.Contains(t))
+                return false;
+            st.Push(t);
+            return true;
+        }
     }
 }
