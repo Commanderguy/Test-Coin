@@ -39,12 +39,12 @@ namespace Test_Coin
                 b.prev_hash = new byte[] { 0 };
             else
                 b.prev_hash = chain.chain[chain.chain.Count - 1].hash;
-            b.AddTransaction(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 }, new byte[] { 4, 4, 4, 4, 2, 21 }, 50);
+            b.AddTransaction(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 }, new byte[] { 4, 4, 4, 4, 2, 21, 4 }, 50);
             Console.WriteLine("Created block");
             b.calculateNonce(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 });
             chain.AddBlock(b);
 
-            Console.WriteLine("Funds of receiving address: " + chain.count_funds(new byte[] { 4, 4, 4, 4, 2, 21 }));
+            Console.WriteLine("Funds of receiving address: " + chain.count_funds(new byte[] { 4, 4, 4, 4, 2, 21, 4 }));
             onFinalizer();
             
             Console.ReadKey();

@@ -27,6 +27,7 @@ namespace BlockChainNode
                 KnownNodes = new List<string>();
             rand = new Random(DateTime.Now.Millisecond * KnownNodes.Count);
             shuffeled_nodes = new Stack<string>( KnownNodes.OrderBy(x => rand.Next()).ToList());
+            processNewNode("192.168.178.74");
         }
 
         private Blockchain _chain;
