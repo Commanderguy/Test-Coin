@@ -17,10 +17,10 @@ namespace BlockChainNode
 
         Stack<string> shuffeled_nodes = new Stack<string>();
         Random rand;
-        
+        string _file;
         public NodeDB(string nodeFile)
         {
-
+            _file = nodeFile;
             if (File.Exists(nodeFile))
                 KnownNodes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(nodeFile);
             else
@@ -99,6 +99,11 @@ namespace BlockChainNode
             }
         }
 
+
+        ~NodeDB()
+        {
+            File.WriteAllText(_file, Newtonsoft.Json.JsonConvert.SerializeObject(KnownNodes));
+        }
 
 
         /// <summary>

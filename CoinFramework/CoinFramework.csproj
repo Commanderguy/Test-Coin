@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountView.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Blockchain.cs" />
     <Compile Include="ECDSA.cs" />

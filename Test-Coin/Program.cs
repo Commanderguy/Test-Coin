@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BlockChainNode;
 using System.Threading;
 using System.Diagnostics;
+using CoinFramework;
 
 namespace Test_Coin
 {
@@ -17,8 +18,6 @@ namespace Test_Coin
         public static Blockchain chain;
         static void Main(string[] args)
         {
-            ECDsa dsa = ECDsa.Create();
-            
             if (!File.Exists("tst.chain"))
             {
                 chain = new Blockchain();
@@ -33,20 +32,28 @@ namespace Test_Coin
             Thread th = new Thread(db.Lookup);
             th.Start(chain);
 
-            Block b = new Block();
-            b.block_number = chain.chain.Count;
-            if (chain.chain.Count == 0)
-                b.prev_hash = new byte[] { 0 };
-            else
-                b.prev_hash = chain.chain[chain.chain.Count - 1].hash;
-            b.AddTransaction(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 }, new byte[] { 4, 4, 4, 4, 2, 21, 4 }, 50);
-            Console.WriteLine("Created block");
-            b.calculateNonce(new byte[] { 2, 0, 0, 4, 5, 4, 3, 2, 1 });
-            chain.AddBlock(b);
 
-            Console.WriteLine("Funds of receiving address: " + chain.count_funds(new byte[] { 4, 4, 4, 4, 2, 21, 4 }));
+
+
+            Block bl = new Block();
+
+            AccountView view = new AccountView();
+
+            Block nullBlock = new Block();
+            nullBlock.block_number = 0;
+            nullBlock.mined = false;
+            nullBlock.miner = view.publicKey;
+            nullBlock.prev_hash = new byte[] { 0, 0, 0, 0 };
+
+            nullBlock.calculateNonce(view.publicKey);
+
+
+            chain.AddBlock(nullBlock);
+
+            Console.WriteLine("Is chain valid: " + chain.validate());
+
+
             onFinalizer();
-            
             Console.ReadKey();
             Process.GetCurrentProcess().Kill();
             

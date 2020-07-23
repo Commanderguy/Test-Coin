@@ -92,9 +92,16 @@ namespace Test_Coin
             transactions.Add(tx);
         }
 
-        public void AddTransaction(byte[] sender, byte[] receiver, double amount)
+        public void AddTransaction(byte[] sender, byte[] receiver, double amount, byte[] signature, int num)
         {
-            Transaction tx = new Transaction(sender, receiver, amount);
+            Transaction tx = new Transaction(false, sender, receiver, amount, num, signature);
+            transactions.Add(tx);
+        }
+
+
+        public void AddNewTransactionEvaluateSignature(byte[] sender, byte[] receiver, double amount, int num, byte[] privateKey)
+        {
+            Transaction tx = new Transaction(sender, receiver, amount, num, privateKey);
             transactions.Add(tx);
         }
 
