@@ -88,7 +88,7 @@ namespace Test_Coin
         /// <summary>
         /// The ECDSA signature for the transaction.
         /// </summary>
-        public byte[] signature { get; }
+        public byte[] signature { get; set; }
 
 
         /// <summary>
@@ -183,6 +183,7 @@ namespace Test_Coin
                     // Implement num counter
                 }
             }
+            // Verify the transaction with the public token
             if(!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender)) return false;
             return bc.count_funds(sender) > value;
         }
