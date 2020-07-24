@@ -55,10 +55,6 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BlockChainNode\BlockChainNode.csproj">
-      <Project>{ed9478c9-1d5d-4d7e-a86e-e38ddb867089}</Project>
-      <Name>BlockChainNode</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">
       <Project>{61ba1a19-cefd-45a2-a3cd-b61c6b41635e}</Project>
       <Name>CoinFramework</Name>
