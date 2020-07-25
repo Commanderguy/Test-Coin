@@ -21,6 +21,7 @@ namespace BlockChainNode
         Stack<string> shuffeled_nodes = new Stack<string>();
         Random rand;
         string _file;
+        
         public NodeDB(string nodeFile)
         {
             _file = nodeFile;

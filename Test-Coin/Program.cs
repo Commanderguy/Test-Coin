@@ -26,26 +26,14 @@ namespace Test_Coin
                  chain = JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText("tst.chain"));
             }
 
-            NodeDB db = new NodeDB("nodes.list");
-            Node node = new BlockChainNode.Node(chain, db);
-
-            Thread th = new Thread(db.Lookup);
-            th.Start(chain);
-
-
-
-
             Block bl = new Block();
 
             AccountView view = new AccountView();
 
             Block nullBlock = new Block();
-            
-
             nullBlock.calculateNonce(view.publicKey);
-
-
-            chain.AddBlock(nullBlock);
+            //chain.AddBlock(nullBlock);
+            
 
 
             Console.WriteLine("Your public key: " + ASCIIEncoding.ASCII.GetString( view.publicKey));
@@ -81,12 +69,6 @@ namespace Test_Coin
 
             onFinalizer();
             Console.ReadKey();
-            Process.GetCurrentProcess().Kill();
-            
-            
-            th.Abort();
-            node.stopThread();
-            
         }
 
         static void onFinalizer()

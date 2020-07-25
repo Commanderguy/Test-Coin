@@ -7,29 +7,74 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
+using System.IO;
 
 namespace Test_Coin
 {
+    /// <summary>
+    /// The underlying Block class, that get's hashed to verify a calculation.
+    /// </summary>
+    /// <Todo>
+    /// Add _blockHash(Block b) constructor. Also maybe mark as abstract and declare hash method with ((_blockHash)this) to only hash these memebers.
+    /// </Todo>
     [Serializable]
     class _blockHash
     {
-        public List<Transaction> transactions = new List<Transaction>();
+        /// <summary>
+        /// The list of transactions.
+        /// </summary>
+        //public List<Transaction> transactions = new List<Transaction>();
+
+
+        /// <summary>
+        /// The hash of the previous block. This ensures, that a miner can't just publish a block with 0 transactions multiple times.
+        /// </summary>
         public byte[] prev_hash;
+
+
+        /// <summary>
+        /// The nonce of the block. With this, we can ensure, that the miner has worked some time for this.
+        /// </summary>
         public string nonce;
+
+
+        /// <summary>
+        /// The number of the block in the blockchain.
+        /// Given index i for blockchain[i].blocknumber == i.
+        /// </summary>
         public long block_number;
-        public _blockHash(List<Transaction> txs, byte[] _prev_hash, string _nonce, long block_num)
+
+
+        /// <summary>
+        /// The public token of the miner.
+        /// </summary>
+        public byte[] miner;
+
+
+        /// <summary>
+        /// Default constructor for simpler initialisation and to save cpu time for faster hashing (later also on gpu).
+        /// </summary>
+        /// <param name="txs">The transactions</param>
+        /// <param name="_prev_hash">The hash of the previous block</param>
+        /// <param name="_nonce">The nonce of the block</param>
+        /// <param name="block_num">The number of the block</param>
+        public _blockHash(List<Transaction> txs, byte[] _prev_hash, string _nonce, long block_num, byte[] _miner)
         {
-            transactions = txs;
+            // Assign paramters to memebrs
+            //transactions = txs;
             prev_hash = _prev_hash;
             nonce = _nonce;
             block_number = block_num;
+            miner = _miner;
         }
     }
 
 
 
 
-    
+    /// <summary>
+    /// The public Block class allows the creating of new blocks or parsing existing ones in the blockchain. Most important 
+    /// </summary>
     public class Block
     {
         public List<Transaction> transactions = new List<Transaction>();
@@ -47,20 +92,25 @@ namespace Test_Coin
 
         public byte[] miner;
 
-        public override string ToString() => Newtonsoft.Json.JsonConvert.SerializeObject(new _blockHash(transactions, prev_hash, nonce, block_number));
+        public override string ToString() => Newtonsoft.Json.JsonConvert.SerializeObject(new _blockHash(transactions, prev_hash, nonce, block_number, miner));
 
 
         public bool isValid(long diff)
         {
             for(int i = 0; i < diff; i++)
             {
-                if (hash[i] != 0) return false;
+                if (hash[i] != 0)
+                {
+                    return false;
+                }
+                
             }
             return true;
         }
 
         public void calculateNonce(byte[] _miner)
         {
+            miner = _miner;
             long tVal = 0;
             bool cond = true;
             Stopwatch stopWatch = new Stopwatch();
@@ -68,10 +118,10 @@ namespace Test_Coin
             while (cond)
             {
                 tVal++;
-                var n = sha.ComputeHash(ASCIIEncoding.ASCII.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new _blockHash(transactions, prev_hash, Convert.ToString(tVal), block_number))));
+                nonce = tVal.ToString();
                 for (int i = 0; i < (block_number / Environment.diffReducer) + Environment.initialDifficulty; i++)
                 {
-                    if (n[i] != 0) goto _end;
+                    if (hash[i] != 0) goto _end;
                 }
                 
                 cond = false;
@@ -81,7 +131,6 @@ namespace Test_Coin
             }
             stopWatch.Stop();
             Console.WriteLine("Found block after " + stopWatch.Elapsed.Hours + "h" + stopWatch.Elapsed.Minutes + "m" + stopWatch.Elapsed.Seconds + "s" + stopWatch.Elapsed.Milliseconds + "ms");
-            miner = _miner;
             mined = true;
             if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty)) throw new Exception("Nonce was stopped before finishing");
         }

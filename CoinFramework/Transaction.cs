@@ -153,6 +153,7 @@ namespace Test_Coin
         /// <param name="txs">The list of IP's</param>
         public void SendTransaction(List<string> txs)
         {
+            throw new NotImplementedException();
             Thread th = new Thread(() =>
             {
                 var NEWTRANSACTION = this;
