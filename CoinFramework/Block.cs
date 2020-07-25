@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using System.IO;
 
-namespace Test_Coin
+namespace CoinFramework
 {
     /// <summary>
     /// The underlying Block class, that get's hashed to verify a calculation.

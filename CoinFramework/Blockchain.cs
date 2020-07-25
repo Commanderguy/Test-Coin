@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Test_Coin
+namespace CoinFramework
 {
     /// <summary>
     /// The blockchain class connects the List of blocks with methods to analyze and validate the chain.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test_Coin
+namespace CoinFramework
 {
     public class Environment
     {

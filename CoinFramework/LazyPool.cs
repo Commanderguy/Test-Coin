@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test_Coin
+namespace CoinFramework
 {
     /// <summary>
     /// The lazypool contains transactions that were not yet added to the most up-to-date blockchain. Priority should ideally given to the most old transactions, but thats an implementation detail. 

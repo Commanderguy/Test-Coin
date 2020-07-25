@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Test_Coin
+namespace CoinFramework
 {
     /// <summary>
     /// The underlying transaction class, that get's hashed to verify a calculation
@@ -154,24 +154,12 @@ namespace Test_Coin
         public void SendTransaction(List<string> txs)
         {
             throw new NotImplementedException();
-            Thread th = new Thread(() =>
-            {
-                var NEWTRANSACTION = this;
-                foreach (var n in txs)
-                {
-                    TcpClient client = new TcpClient(n, 8080);
-                    var stream = client.GetStream();
-                    var send = ASCIIEncoding.ASCII.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(NEWTRANSACTION));
-                    stream.Write(send, 0, send.Length);
-                    client.Close();
-                }
-            });
-            th.Start();
+            
         }
 
 
         /// <summary>
-        /// Returns true if the transaction is valid. Verifies transactionnumber, signature, and if the sender even has the provided funds. 
+        /// Returns true if the transaction is valid. Verifies transactionnumber, signature, and if the sender even has the funds it tries to send. 
         /// </summary>
         /// <param name="bc">The blockchain, to get the funds of the senders token.</param>
         /// <returns></returns>
