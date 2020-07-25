@@ -95,7 +95,7 @@ namespace CoinFramework
         public override string ToString() => Newtonsoft.Json.JsonConvert.SerializeObject(new _blockHash(transactions, prev_hash, nonce, block_number, miner));
 
 
-        public bool isValid(long diff)
+        public bool isValid(long diff, Blockchain bc)
         {
             for(int i = 0; i < diff; i++)
             {
@@ -103,12 +103,15 @@ namespace CoinFramework
                 {
                     return false;
                 }
-                
+            }
+            foreach(var tx in transactions)
+            {
+                if (!tx.isValid(bc)) return false;
             }
             return true;
         }
 
-        public void calculateNonce(byte[] _miner)
+        public void calculateNonce(byte[] _miner, Blockchain chain)
         {
             miner = _miner;
             long tVal = 0;
@@ -132,7 +135,7 @@ namespace CoinFramework
             stopWatch.Stop();
             Console.WriteLine("Found block after " + stopWatch.Elapsed.Hours + "h" + stopWatch.Elapsed.Minutes + "m" + stopWatch.Elapsed.Seconds + "s" + stopWatch.Elapsed.Milliseconds + "ms");
             mined = true;
-            if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty)) throw new Exception("Nonce was stopped before finishing");
+            if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty, chain)) throw new Exception("Nonce was stopped before finishing");
         }
 
 

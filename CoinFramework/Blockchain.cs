@@ -24,7 +24,7 @@ namespace CoinFramework
         {
             for(int i = 0; i < chain.Count; i++)
             {
-                if (!chain[i].isValid((chain[i].block_number / Environment.diffReducer) + Environment.initialDifficulty)) return false;
+                if (!chain[i].isValid((chain[i].block_number / Environment.diffReducer) + Environment.initialDifficulty, this)) return false;
             }
             return true;
         }

@@ -60,6 +60,10 @@
       <Project>{61ba1a19-cefd-45a2-a3cd-b61c6b41635e}</Project>
       <Name>CoinFramework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Test-Coin\Test-Coin.csproj">
+      <Project>{3ea2aa67-107f-4bcb-bd58-b99792e6699a}</Project>
+      <Name>Test-Coin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

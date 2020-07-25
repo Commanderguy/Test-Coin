@@ -24,7 +24,7 @@ namespace Test_Coin
             AccountView view = new AccountView();
 
             Block nullBlock = new Block();
-            nullBlock.calculateNonce(view.publicKey);
+            nullBlock.calculateNonce(view.publicKey, chain);
             //chain.AddBlock(nullBlock);
             
 
@@ -40,9 +40,8 @@ namespace Test_Coin
             pool.addTx(tx);
             Block b2 = pool.ForgeBlock();
             b2.block_number = chain.chain.Count;
-            b2.calculateNonce(view.publicKey);
             b2.prev_hash = chain.chain[chain.chain.Count - 1].hash;
-            b2.calculateNonce(view.publicKey);
+            b2.calculateNonce(view.publicKey, chain);
 
             chain.AddBlock(b2);
 
