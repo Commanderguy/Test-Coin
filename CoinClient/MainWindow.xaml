@@ -1,0 +1,55 @@
+﻿<Window x:Class="CoinClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Controls.Barcode;assembly=Syncfusion.SfBarcode.WPF"
+        xmlns:local="clr-namespace:CoinClient"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Column="0" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            
+
+            <Rectangle Fill="Black" Grid.RowSpan="10" Opacity="0.2" />
+
+            <Rectangle Fill="Black" Grid.Row="2" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
+            <Rectangle Fill="Black" Grid.Row="3" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
+            <Rectangle Fill="Black" Grid.Row="4" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
+            <Image x:Name="BarCodeAcc" Margin="5" Source="C:\Users\johan\OneDrive\Dokumente\Bilder\_ImgSource\fmt.png" Stretch="Uniform"/>
+            
+            <Label Content="Account name" Grid.Row="1" FontSize="21"/>
+            <Label Content="Manage accounts" Grid.Row="2" FontSize="21" />
+            <Label Content="Open GPU-Miner" Grid.Row="3" FontSize="21" />
+            <Label Content="Settings" Grid.Row="4" FontSize="21" />
+            <Label Content="Offline" Grid.Row="7" FontSize="21" />
+        </Grid>
+
+        <Label x:Name="AccountAddress" Content="4543533542000000010057e0e8628a03749dcfac541a63faa4edddb49c6db25f6f36840c157d50601df1d9915ef3fbcd4e5fe6763a317bb13e87fade6b03893825001c828cab8856aa3600b3ad3e2c23a2e010d2fc66d15951213bb16195c7b0167428518a6f20942728b84c2de29f95a6a4849d00ec65ee2c1443bf9ad320fe91fb476c01dc557c1994cbb9"
+               Grid.Column="2"
+               Width="500"
+               TextBlock.TextAlignment="Center"
+               VerticalAlignment="Bottom"
+               />
+
+        <Label Content="Balance: " Grid.Column="1" FontSize="50" HorizontalAlignment="Center" />
+        <Label x:Name="Balance" Content="" Grid.Column="1" FontSize="30" HorizontalAlignment="Center" Margin="80" />
+
+    </Grid>
+</Window>

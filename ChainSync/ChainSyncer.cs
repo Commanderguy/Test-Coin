@@ -1,9 +1,4 @@
 ﻿using CoinFramework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChainSync
 {
@@ -15,5 +10,9 @@ namespace ChainSync
         {
             _chain = chain;
         }
+
+        public delegate void onConnected();
+        public onConnected onConnection { get; set; }
+        
     }
 }
