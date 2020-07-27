@@ -8,7 +8,7 @@ namespace Tests
     public class CoinFrameworkTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void BlockchainTests()
         {
             Blockchain chain = new Blockchain();
 
@@ -35,7 +35,7 @@ namespace Tests
             chain.AddBlock(b);
 
             Assert.AreEqual(chain.count_funds(Person1.publicKey), 70, "Person one has a wrong number of coins");
-            Assert.AreEqual(chain.count_funds(Person2.publicKey), 30, "Person one has a wrong number of coins");
+            Assert.AreEqual(chain.count_funds(Person2.publicKey), 30, "Person two has a wrong number of coins");
             
 
         }
