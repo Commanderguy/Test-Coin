@@ -34,22 +34,44 @@
             <Rectangle Fill="Black" Grid.Row="4" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
             <Image x:Name="BarCodeAcc" Margin="5" Source="C:\Users\johan\OneDrive\Dokumente\Bilder\_ImgSource\fmt.png" Stretch="Uniform"/>
             
-            <Label Content="Account name" Grid.Row="1" FontSize="21"/>
+            <Label Content="Management" Grid.Row="1" FontSize="21"/>
             <Label Content="Manage accounts" Grid.Row="2" FontSize="21" />
             <Label Content="Open GPU-Miner" Grid.Row="3" FontSize="21" />
             <Label Content="Settings" Grid.Row="4" FontSize="21" />
             <Label Content="Offline" Grid.Row="7" FontSize="21" />
         </Grid>
 
-        <Label x:Name="AccountAddress" Content="4543533542000000010057e0e8628a03749dcfac541a63faa4edddb49c6db25f6f36840c157d50601df1d9915ef3fbcd4e5fe6763a317bb13e87fade6b03893825001c828cab8856aa3600b3ad3e2c23a2e010d2fc66d15951213bb16195c7b0167428518a6f20942728b84c2de29f95a6a4849d00ec65ee2c1443bf9ad320fe91fb476c01dc557c1994cbb9"
+        <Label x:Name="AccountAddress" Content=""
                Grid.Column="2"
                Width="500"
                TextBlock.TextAlignment="Center"
-               VerticalAlignment="Bottom"
+               VerticalAlignment="Bottom" MouseLeftButtonDown="AccountAddress_MouseLeftButtonDown"
                />
 
         <Label Content="Balance: " Grid.Column="1" FontSize="50" HorizontalAlignment="Center" />
-        <Label x:Name="Balance" Content="" Grid.Column="1" FontSize="30" HorizontalAlignment="Center" Margin="80" />
+        <Label x:Name="Balance" Content="" Grid.Column="1" FontSize="30" HorizontalAlignment="Center" Margin="60" />
+
+        <Grid Grid.Column="1" Margin="40, 110, 40, 80">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Rectangle Fill="AliceBlue" />
+            <Label Content="No data to visualize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+            <StackPanel Grid.Column="1">
+                <Button x:Name="SendButton" Content="Send" Margin="10" Click="SendButton_Click"/>
+                <Button x:Name="InspAcc" Content="Inspect Account" Margin="10, 0" />
+                <Button x:Name="SaveAccToFile" Content="Save Account to file" Margin="10" />
+                <Button x:Name="SavePublicToken" Content="Save Public token to clipboard" Margin="10, 0" />
+                <Button x:Name="SavePrivateToken" Content="Save Private token to clipboard" Margin="10" />
+            </StackPanel>
+
+            
+
+        </Grid>
+
+        <local:RequestSendAdress Grid.Column="1" Visibility="Hidden" x:Name="SendInterface" />
 
     </Grid>
 </Window>
