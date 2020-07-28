@@ -6,7 +6,8 @@
         xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Controls.Barcode;assembly=Syncfusion.SfBarcode.WPF"
         xmlns:local="clr-namespace:CoinClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -62,9 +63,9 @@
             <StackPanel Grid.Column="1">
                 <Button x:Name="SendButton" Content="Send" Margin="10" Click="SendButton_Click"/>
                 <Button x:Name="InspAcc" Content="Inspect Account" Margin="10, 0" />
-                <Button x:Name="SaveAccToFile" Content="Save Account to file" Margin="10" />
-                <Button x:Name="SavePublicToken" Content="Save Public token to clipboard" Margin="10, 0" />
-                <Button x:Name="SavePrivateToken" Content="Save Private token to clipboard" Margin="10" />
+                <Button x:Name="SaveAccToFile" Content="Save Account to file" Margin="10" Click="SaveAccToFile_Click" />
+                <Button x:Name="SavePublicToken" Content="Save Public token to clipboard" Margin="10, 0" Click="SavePublicToken_Click" />
+                <Button x:Name="SavePrivateToken" Content="Save Private token to clipboard" Margin="10" Click="SavePrivateToken_Click" />
             </StackPanel>
 
             

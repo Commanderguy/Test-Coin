@@ -7,15 +7,33 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CoinFramework;
+using Microsoft.Win32;
 
 namespace CoinClient
 {
+
+    struct keySafe
+    {
+        public byte[] publicKey;
+        public byte[] privateKey;
+        public keySafe(byte[] pubKey, byte[] privKey)
+        {
+            publicKey = pubKey;
+            privateKey = privKey;
+        }
+    }
+
+
+
+
+
     /// <summary>
     /// Show a side panel and the balance of the account
     /// </summary>
@@ -45,6 +63,7 @@ namespace CoinClient
                 accounts = new Dictionary<string, AccountView>();
                 accounts.Add("DEBUG-Account", new AccountView());
                 current = accounts.First().Value;
+                accName = accounts.First().Key;
                 File.WriteAllText(".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
             }
 
@@ -69,6 +88,7 @@ namespace CoinClient
 
 
         AccountView current;
+        string accName;
 
         Dictionary<string, AccountView> accounts;
 
@@ -140,7 +160,7 @@ namespace CoinClient
 
         private void AccountAddress_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Clipboard.SetText(ByteArrToString(current.publicKey));
+            System.Windows.Clipboard.SetText(ByteArrToString(current.publicKey));
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -153,6 +173,32 @@ namespace CoinClient
         public void ReceiveTransaction(Transaction tx)
         {
             SendInterface.Visibility = Visibility.Hidden;
+        }
+
+        private void SavePublicToken_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Clipboard.SetText(ByteArrToString(current.publicKey));
+        }
+
+        private void SavePrivateToken_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Clipboard.SetText(ByteArrToString(current.privateKey));
+        }
+
+        [STAThread]
+        private void SaveAccToFile_Click(object sender, RoutedEventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = "Select folder to save account file to";
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    File.WriteAllText(fbd.SelectedPath + "/" + accName + ".acc", Newtonsoft.Json.JsonConvert.SerializeObject(new keySafe(current.publicKey, current.privateKey)));
+                }
+            }
+
         }
     }
 }
