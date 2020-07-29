@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -91,23 +93,32 @@ namespace CoinClient
         }
 
 
+        static string chainFolder = ".CHAIN/";
+
+
+        FileSystemWatcher watcher = new FileSystemWatcher(chainFolder);
+
+
         /// <summary>
         /// Constructor
         /// </summary>
         public MainWindow()
         {
+            
+            if (!Directory.Exists(".CHAIN"))
+                Directory.CreateDirectory(".CHAIN");
             bool nChain = false;
-            if (File.Exists(".blockChain"))
-                chain = Newtonsoft.Json.JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText(".blockChain"));
+            if (File.Exists(chainFolder + ".blockChain"))
+                chain = Newtonsoft.Json.JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText(chainFolder + ".blockChain"));
             else
             {
                 chain = new Blockchain();
                 nChain = true;
             }
 
-            if (File.Exists(".AccountList"))
+            if (File.Exists(chainFolder + ".AccountList"))
             {
-                accounts = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, AccountView>>(File.ReadAllText(".AccountList"));
+                accounts = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, AccountView>>(File.ReadAllText(chainFolder + ".AccountList"));
                 current = accounts.First().Value;
                 accName = accounts.First().Key;
                 
@@ -118,7 +129,7 @@ namespace CoinClient
                 accounts.Add("DEBUG-Account", new AccountView());
                 current = accounts.First().Value;
                 accName = accounts.First().Key;
-                File.WriteAllText(".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
+                File.WriteAllText(chainFolder + ".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
             }
 
             if(nChain)
@@ -131,6 +142,35 @@ namespace CoinClient
             AccountAddress.Content = ByteArrToString(current.publicKey, 37);
             onChainUpdated += UpdateBalance;
             onChainUpdated();
+
+            watcher.EnableRaisingEvents = true;
+            watcher.Changed += Watcher_Changed;
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                chain = Newtonsoft.Json.JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText(chainFolder + ".blockChain"));
+            }catch(System.IO.IOException)
+            {
+                new Thread(() =>
+                {
+                    for (; ; )
+                    {
+                        try
+                        {
+                            chain = Newtonsoft.Json.JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText(chainFolder + ".blockChain"));
+                            Dispatcher.Invoke(UpdateBalance);
+                            return;
+                        }
+                        catch (IOException)
+                        {
+                            continue;
+                        }
+                    }
+                }).Start();
+            }
         }
 
 
@@ -160,7 +200,7 @@ namespace CoinClient
 
         public void Save()
         {
-            File.WriteAllText(".blockChain", Newtonsoft.Json.JsonConvert.SerializeObject(chain));
+            File.WriteAllText(chainFolder + ".blockChain", Newtonsoft.Json.JsonConvert.SerializeObject(chain));
         }
 
         /// <summary>
@@ -279,7 +319,12 @@ namespace CoinClient
 
         private void Label_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
-            this.NotImplMessage("GPU-Miner");
+            File.WriteAllText(chainFolder + ".MINERACC", JsonConvert.SerializeObject(new keySafe(current.publicKey, current.privateKey)));
+
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.FileName = new FileInfo("CPU-Miner.exe").FullName;
+            info.Arguments = chainFolder;
+            Process.Start(info);
         }
 
         private void Label_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -288,6 +333,7 @@ namespace CoinClient
 
         private void Label_MouseLeftButtonUp_2(object sender, MouseButtonEventArgs e)
         {
+            UpdateBalance();
             SendInterface.Visibility = Visibility.Hidden;
             AccountInterface.Visibility = Visibility.Hidden;
             AccountInterface.end();
@@ -298,18 +344,18 @@ namespace CoinClient
         public void SaveTxToFile(Transaction tx)
         {
             List<Transaction> pool;
-            if (File.Exists(".LazyPool"))
-                pool = JsonConvert.DeserializeObject<List<Transaction>>(File.ReadAllText(".LazyPool"));
+            if (File.Exists(chainFolder + ".LazyPool"))
+                pool = JsonConvert.DeserializeObject<List<Transaction>>(File.ReadAllText(chainFolder + ".LazyPool"));
             else
                 pool = new List<Transaction>();
             pool.Add(tx);
-            File.WriteAllText(".LazyPool", JsonConvert.SerializeObject(pool));
+            File.WriteAllText(chainFolder + ".LazyPool", JsonConvert.SerializeObject(pool));
         }
 
 
         ~MainWindow()
         {
-            File.WriteAllText(".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
+            File.WriteAllText(chainFolder + ".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
         }
 
         private void Label_MouseLeftButtonUp_3(object sender, MouseButtonEventArgs e)

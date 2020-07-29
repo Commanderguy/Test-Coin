@@ -30,6 +30,7 @@ namespace CoinClient
         bool active = false;
         public void init(Dictionary<string, AccountView> Accounts, ref AccountView current, string currName, Blockchain chain, string currency, UpdateMainBalance u, UpdateCurrent u2)
         {
+            _chain = chain;
             if (active) return;
             up = u;
             up2 = u2;
