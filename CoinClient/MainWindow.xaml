@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Controls.Barcode;assembly=Syncfusion.SfBarcode.WPF"
+        xmlns:sfc="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:CoinClient"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -38,8 +38,8 @@
             
             <Label Content="Management" Grid.Row="1" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp_2"/>
             <Label Content="Manage accounts" Grid.Row="2" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp" />
-            <Label Content="Open GPU-Miner" Grid.Row="3" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp_1" />
-            <Label Content="Settings" Grid.Row="4" FontSize="21" IsKeyboardFocusWithinChanged="Label_IsKeyboardFocusWithinChanged" />
+            <Label Content="Open CPU-Miner" Grid.Row="3" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp_1" />
+            <Label Content="Settings" Grid.Row="4" FontSize="21" IsKeyboardFocusWithinChanged="Label_IsKeyboardFocusWithinChanged" MouseLeftButtonUp="Label_MouseLeftButtonUp_4" />
             <Label Content="Contacts" Grid.Row="5" FontSize="21" IsKeyboardFocusWithinChanged="Label_IsKeyboardFocusWithinChanged" MouseLeftButtonUp="Label_MouseLeftButtonUp_3" />
             <Label Content="Offline" Grid.Row="7" FontSize="21" />
         </Grid>
@@ -59,8 +59,17 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Rectangle Fill="AliceBlue" />
-            <Label Content="No data to visualize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Rectangle Fill="AliceBlue" Visibility="Visible"/>
+            <sfc:SfChart Visibility="Hidden" x:Name="BalanceChart">
+                <sfc:SfChart.PrimaryAxis>
+                    <sfc:NumericalAxis/>
+                </sfc:SfChart.PrimaryAxis>
+                <sfc:SfChart.SecondaryAxis>
+                    <sfc:NumericalAxis/>
+                </sfc:SfChart.SecondaryAxis>
+                    
+            </sfc:SfChart>
+            <Label Content="No data to visualize" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible" />
 
             <StackPanel Grid.Column="1">
                 <Button x:Name="SendButton" Content="Send" Margin="15, 21" Click="SendButton_Click"/>
@@ -76,5 +85,6 @@
 
         <local:RequestSendAdress Grid.Column="1" Visibility="Hidden" x:Name="SendInterface" />
         <local:AccountManager Grid.Column="1" Visibility="Hidden" x:Name="AccountInterface"/>
+        <local:ContactPage Grid.Column="1" Visibility="Hidden" x:Name="ContactInterface"/>
     </Grid>
 </Window>

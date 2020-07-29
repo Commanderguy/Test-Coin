@@ -17,9 +17,57 @@ using CoinFramework;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
+using Syncfusion.UI.Xaml.Charts;
 
 namespace CoinClient
 {
+
+    public class txStatus
+    {
+        public static List<txStatus> GetByChain(byte[] address, Blockchain chain)
+        {
+            List<txStatus> ret = new List<txStatus>();
+            double stat = 0;
+
+            bool fTx = false;
+            for(int i = 0; i < chain.chain.Count; i++)
+            {
+                for(int n = 0; n < chain.chain[i].transactions.Count; n++)
+                {
+                    if(chain.chain[i].transactions[n].receiver == address)
+                    {
+                        fTx = true;
+                        stat += chain.chain[i].transactions[n].value;
+                    }else if(chain.chain[i].transactions[n].sender == address)
+                    {
+                        fTx = true;
+                        stat -= chain.chain[i].transactions[n].value;
+                    }
+                }
+                if (Enumerable.SequenceEqual(address, chain.chain[i].miner))
+                {
+                    fTx = true;
+                    stat += CoinFramework.Environment.InitialCoinPerBlock / ((chain.chain[i].block_number / CoinFramework.Environment.diffReducer) + 1);
+                }
+
+                if(fTx)
+                {
+                    txStatus st = new txStatus();
+                    st.balance = stat;
+                    st.block = i;
+                    Console.WriteLine("Added to series");
+                }
+
+            }
+
+            return null;
+        }
+
+        public double balance;
+        public int block;
+    }
+
+
 
     public struct keySafe
     {
@@ -151,6 +199,11 @@ namespace CoinClient
         public void UpdateBalance()
         {
             Balance.Content = chain.count_funds(current.publicKey).ToString() + (string)Environment.CurrencyType;
+            ColumnSeries Series = new ColumnSeries();
+            Series.ItemsSource = txStatus.GetByChain(current.publicKey, chain);
+            Series.XBindingPath = "block";
+            Series.YBindingPath = "balance";
+            BalanceChart.Series.Add(Series);
         }
 
 
@@ -179,6 +232,7 @@ namespace CoinClient
         public void ReceiveTransaction(Transaction tx)
         {
             SendInterface.Visibility = Visibility.Hidden;
+            SaveTxToFile(tx);
         }
 
         private void SavePublicToken_Click(object sender, RoutedEventArgs e)
@@ -214,6 +268,7 @@ namespace CoinClient
             AccountInterface.Visibility = Visibility.Visible;
             AccountInterface.init(accounts, ref current, accName, chain, (string)Environment.CurrencyType, UpdateBalance, updateCurrent);
             AccountInterface.AccAddWindow.Visibility = Visibility.Hidden;
+            ContactInterface.Visibility = Visibility.Hidden;
         }
 
         private void updateCurrent(AccountView v, string cur)
@@ -229,7 +284,6 @@ namespace CoinClient
 
         private void Label_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.NotImplMessage("Settings");
         }
 
         private void Label_MouseLeftButtonUp_2(object sender, MouseButtonEventArgs e)
@@ -237,6 +291,19 @@ namespace CoinClient
             SendInterface.Visibility = Visibility.Hidden;
             AccountInterface.Visibility = Visibility.Hidden;
             AccountInterface.end();
+            ContactInterface.Visibility = Visibility.Hidden;
+        }
+
+
+        public void SaveTxToFile(Transaction tx)
+        {
+            List<Transaction> pool;
+            if (File.Exists(".LazyPool"))
+                pool = JsonConvert.DeserializeObject<List<Transaction>>(File.ReadAllText(".LazyPool"));
+            else
+                pool = new List<Transaction>();
+            pool.Add(tx);
+            File.WriteAllText(".LazyPool", JsonConvert.SerializeObject(pool));
         }
 
 
@@ -247,7 +314,21 @@ namespace CoinClient
 
         private void Label_MouseLeftButtonUp_3(object sender, MouseButtonEventArgs e)
         {
+            SendInterface.Visibility = Visibility.Hidden;
+            AccountInterface.Visibility = Visibility.Hidden;
+            AccountInterface.end();
+            ContactInterface.Visibility = Visibility.Visible;
+            ContactInterface.init(onSendTx, chain);
+        }
 
+        private void onSendTx(Transaction tx)
+        {
+            SaveTxToFile(tx);
+        }
+
+        private void Label_MouseLeftButtonUp_4(object sender, MouseButtonEventArgs e)
+        {
+            this.NotImplMessage("Settings");
         }
     }
 }

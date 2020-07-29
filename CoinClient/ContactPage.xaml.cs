@@ -36,8 +36,12 @@ namespace CoinClient
             cur = v;
         }
 
+        bool _init = false;
+
         public void init(sendTransaction onSendTx, Blockchain chain)
         {
+            if (_init) return;
+            _init = true;
             sendTx += onSendTx;
             if (File.Exists(".contacts"))
                 contacts = JsonConvert.DeserializeObject<List<Contact>>(File.ReadAllText(".contacts"));
@@ -48,9 +52,26 @@ namespace CoinClient
             {
                 x.balance = chain.count_funds(x.pubToken);
                 ContactItem item = new ContactItem(x.pubToken, x.name, x.balance, OpenSendDialogue);
+                item.Margin = new Thickness(20);
                 contactList.Children.Add(item);
             }
-            
+
+            Button b = new Button();
+            b.Content = "Add contact";
+            b.FontSize = 30;
+            b.Click += onAddContact;
+            b.Margin = new Thickness(30);
+            contactList.Children.Add(b);
+        }
+
+        public void Save()
+        {
+            File.WriteAllText(".contacts", JsonConvert.SerializeObject(contacts));
+        }
+
+        private void onAddContact(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void OpenSendDialogue(byte[] pubToken, string name)
