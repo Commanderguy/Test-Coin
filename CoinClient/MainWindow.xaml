@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:CoinClient"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        ResizeMode="NoResize">
+        ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -33,12 +33,14 @@
             <Rectangle Fill="Black" Grid.Row="2" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
             <Rectangle Fill="Black" Grid.Row="3" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
             <Rectangle Fill="Black" Grid.Row="4" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
+            <Rectangle Fill="Black" Grid.Row="5" VerticalAlignment="Top" Height="2" Opacity="0.8" Margin="2, 0, 2, 0" />
             <Image x:Name="BarCodeAcc" Margin="5" Source="C:\Users\johan\OneDrive\Dokumente\Bilder\_ImgSource\fmt.png" Stretch="Uniform"/>
             
-            <Label Content="Management" Grid.Row="1" FontSize="21"/>
-            <Label Content="Manage accounts" Grid.Row="2" FontSize="21" />
-            <Label Content="Open GPU-Miner" Grid.Row="3" FontSize="21" />
-            <Label Content="Settings" Grid.Row="4" FontSize="21" />
+            <Label Content="Management" Grid.Row="1" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp_2"/>
+            <Label Content="Manage accounts" Grid.Row="2" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp" />
+            <Label Content="Open GPU-Miner" Grid.Row="3" FontSize="21" MouseLeftButtonUp="Label_MouseLeftButtonUp_1" />
+            <Label Content="Settings" Grid.Row="4" FontSize="21" IsKeyboardFocusWithinChanged="Label_IsKeyboardFocusWithinChanged" />
+            <Label Content="Contacts" Grid.Row="5" FontSize="21" IsKeyboardFocusWithinChanged="Label_IsKeyboardFocusWithinChanged" MouseLeftButtonUp="Label_MouseLeftButtonUp_3" />
             <Label Content="Offline" Grid.Row="7" FontSize="21" />
         </Grid>
 
@@ -61,11 +63,11 @@
             <Label Content="No data to visualize" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
             <StackPanel Grid.Column="1">
-                <Button x:Name="SendButton" Content="Send" Margin="10" Click="SendButton_Click"/>
-                <Button x:Name="InspAcc" Content="Inspect Account" Margin="10, 0" />
-                <Button x:Name="SaveAccToFile" Content="Save Account to file" Margin="10" Click="SaveAccToFile_Click" />
-                <Button x:Name="SavePublicToken" Content="Save Public token to clipboard" Margin="10, 0" Click="SavePublicToken_Click" />
-                <Button x:Name="SavePrivateToken" Content="Save Private token to clipboard" Margin="10" Click="SavePrivateToken_Click" />
+                <Button x:Name="SendButton" Content="Send" Margin="15, 21" Click="SendButton_Click"/>
+                <Button x:Name="InspAcc" Content="Inspect Account" Margin="15, 0" Click="InspAcc_Click" />
+                <Button x:Name="SaveAccToFile" Content="Save Account to file" Margin="15, 21" Click="SaveAccToFile_Click" />
+                <Button x:Name="SavePublicToken" Content="Save Public token to clipboard" Margin="15, 0" Click="SavePublicToken_Click" />
+                <Button x:Name="SavePrivateToken" Content="Save Private token to clipboard" Margin="15, 21" Click="SavePrivateToken_Click" />
             </StackPanel>
 
             
@@ -73,6 +75,6 @@
         </Grid>
 
         <local:RequestSendAdress Grid.Column="1" Visibility="Hidden" x:Name="SendInterface" />
-
+        <local:AccountManager Grid.Column="1" Visibility="Hidden" x:Name="AccountInterface"/>
     </Grid>
 </Window>

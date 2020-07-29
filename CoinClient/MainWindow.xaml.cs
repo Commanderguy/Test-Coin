@@ -15,11 +15,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CoinFramework;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
 
 namespace CoinClient
 {
 
-    struct keySafe
+    public struct keySafe
     {
         public byte[] publicKey;
         public byte[] privateKey;
@@ -30,15 +32,17 @@ namespace CoinClient
         }
     }
 
-
-
-
-
     /// <summary>
     /// Show a side panel and the balance of the account
     /// </summary>
     public partial class MainWindow : Window
     {
+        private void NotImplMessage(string feature)
+        {
+            System.Windows.Forms.MessageBox.Show($"The '{feature}' feature is not implemented yet", "WIP", MessageBoxButtons.OK);
+        }
+
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -57,6 +61,8 @@ namespace CoinClient
             {
                 accounts = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, AccountView>>(File.ReadAllText(".AccountList"));
                 current = accounts.First().Value;
+                accName = accounts.First().Key;
+                
             }
             else
             {
@@ -132,7 +138,7 @@ namespace CoinClient
         /// </summary>
         /// <param name="arr">The byte array</param>
         /// <returns>The array as a string</returns>
-        static string ByteArrToString(byte[] arr)
+        public static string ByteArrToString(byte[] arr)
         {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < arr.Length; i++)
@@ -188,16 +194,59 @@ namespace CoinClient
         [STAThread]
         private void SaveAccToFile_Click(object sender, RoutedEventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = "C:\\Users";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                fbd.Description = "Select folder to save account file to";
-                DialogResult result = fbd.ShowDialog();
+                    File.WriteAllText(dialog.FileName + "/" + accName + ".acc", Newtonsoft.Json.JsonConvert.SerializeObject(new keySafe(current.publicKey, current.privateKey)));
 
-                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    File.WriteAllText(fbd.SelectedPath + "/" + accName + ".acc", Newtonsoft.Json.JsonConvert.SerializeObject(new keySafe(current.publicKey, current.privateKey)));
-                }
             }
+        }
+
+        private void InspAcc_Click(object sender, RoutedEventArgs e)
+        {
+            this.NotImplMessage("Inspect account");
+        }
+
+        private void Label_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            AccountInterface.Visibility = Visibility.Visible;
+            AccountInterface.init(accounts, ref current, accName, chain, (string)Environment.CurrencyType, UpdateBalance, updateCurrent);
+            AccountInterface.AccAddWindow.Visibility = Visibility.Hidden;
+        }
+
+        private void updateCurrent(AccountView v, string cur)
+        {
+            current = v;
+            accName = cur;
+        }
+
+        private void Label_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
+        {
+            this.NotImplMessage("GPU-Miner");
+        }
+
+        private void Label_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            this.NotImplMessage("Settings");
+        }
+
+        private void Label_MouseLeftButtonUp_2(object sender, MouseButtonEventArgs e)
+        {
+            SendInterface.Visibility = Visibility.Hidden;
+            AccountInterface.Visibility = Visibility.Hidden;
+            AccountInterface.end();
+        }
+
+
+        ~MainWindow()
+        {
+            File.WriteAllText(".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
+        }
+
+        private void Label_MouseLeftButtonUp_3(object sender, MouseButtonEventArgs e)
+        {
 
         }
     }

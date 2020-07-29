@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="CoinClient.AmountSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CoinClient"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Rectangle Fill="White"/>
+        <StackPanel>
+            <Label Content="How many coins do you&#10; want to send to X" HorizontalAlignment="Center" FontSize="40"/>
+            <TextBox x:Name="amountVal" FontSize="35" Margin="200, 10"  Height="50" TextChanged="amountVal_TextChanged"/>
+            <Button x:Name="SendButton" Content="Send" Margin="230, 10" FontSize="40" Click="SendButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Margin="260, 10" FontSize="30" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
