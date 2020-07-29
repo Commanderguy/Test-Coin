@@ -34,9 +34,11 @@ namespace CoinClient
             publicKey = pubKey;
             finished += finishFunc;
             
-            SndLabel.Content = "Send " + currency; 
-
+            SndLabel.Content = "Send " + currency;
+            c = chain;
         }
+
+        Blockchain c;
 
         byte[] privateKey;
         byte[] publicKey;
@@ -45,7 +47,7 @@ namespace CoinClient
 
         private void ConfirmTx_Click(object sender, RoutedEventArgs e)
         {
-            Transaction tx = new Transaction(publicKey, StringToByteArray(Rec.Text), Convert.ToDouble(Amount.Text), 0, privateKey);
+            Transaction tx = new Transaction(publicKey, StringToByteArray(Rec.Text), Convert.ToDouble(Amount.Text), c.numTransactions(publicKey), privateKey);
             finished(tx);
         }
 

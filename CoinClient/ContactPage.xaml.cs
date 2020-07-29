@@ -40,6 +40,7 @@ namespace CoinClient
 
         public void init(sendTransaction onSendTx, Blockchain chain)
         {
+            _chain = chain;
             if (_init) return;
             _init = true;
             sendTx += onSendTx;
@@ -64,6 +65,8 @@ namespace CoinClient
             contactList.Children.Add(b);
         }
 
+        Blockchain _chain;
+
         public void Save()
         {
             File.WriteAllText(".contacts", JsonConvert.SerializeObject(contacts));
@@ -84,7 +87,7 @@ namespace CoinClient
             if (amount == 0 && pToken == null)
                 return;
 
-            Transaction tx = new Transaction(cur.publicKey, pToken, amount, 0, cur.privateKey);
+            Transaction tx = new Transaction(cur.publicKey, pToken, amount, _chain.numTransactions(cur.publicKey), cur.privateKey);
         }
 
         List<Contact> contacts;

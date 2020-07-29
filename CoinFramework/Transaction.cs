@@ -163,17 +163,41 @@ namespace CoinFramework
         /// </summary>
         /// <param name="bc">The blockchain, to get the funds of the senders token.</param>
         /// <returns></returns>
-        public bool isValid(Blockchain bc)
+        public bool isValid(Blockchain bc, long bPos)
         {
-            foreach(var x in bc.chain)
+            bool Found = false;
+            for (int i = 0; i < bPos; i++)
             {
-                foreach(var n in x.transactions)
+                if(i == bPos)
                 {
-                    // Implement num counter
+                    foreach(var x in bc.chain[i].transactions)
+                    {
+                        if (x.num == num)
+                        {
+                            if (Found)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                Found = true;
+                            }
+                        }
+
+                    }
+                    goto End;
                 }
+                foreach(var x in bc.chain[i].transactions)
+                {
+                    if (num == x.num)
+                        return false;
+                }
+
+                
             }
+            End:
             // Verify the transaction with the public token
-            if(!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender)) return false;
+            if (!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender)) { Console.WriteLine("isValid has found an invalid Transaction"); return false; }
             return bc.count_funds(sender) > value;
         }
     }

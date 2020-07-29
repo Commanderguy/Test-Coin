@@ -18,11 +18,12 @@ namespace CPU_Miner
             watcher = new FileSystemWatcher(args[0]);
             watcher.EnableRaisingEvents = true;
             watcher.Changed += Watcher_Changed;
-            
-
-
+           
             Console.WriteLine("Starting to parse blockchain");
             dir = args[0];
+
+            
+            fSize = new FileInfo(dir + ".blockChain").Length;
 
             miner = JsonConvert.DeserializeObject<keySafe>(File.ReadAllText(dir + ".MINERACC"));
 
@@ -32,6 +33,7 @@ namespace CPU_Miner
             Console.WriteLine("SHA-512 JSONCHAIN CPU MINER V1\nUse command 'help' for help or 'mine' to mine current LazyPool");
             commands.Add("help", cmdHelp);
             commands.Add("mine", mine);
+            commands.Add("idle", idle);
             try
             {
                 for (; ; )
@@ -46,6 +48,8 @@ namespace CPU_Miner
                 Console.ReadLine();
             }
         }
+
+        static long fSize;
 
         private static void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
@@ -79,7 +83,7 @@ namespace CPU_Miner
 
         public static void cmdHelp(string query)
         {
-            Console.WriteLine("HELP\nType mine to start mining with the .Lazypool file");
+            Console.WriteLine("HELP\nType mine to start mining with the .Lazypool file\nType 'idle' for repeated mining");
         }
         
         static LazyPool pool = new LazyPool();
@@ -88,6 +92,10 @@ namespace CPU_Miner
         {
             try
             {
+                if(new FileInfo(dir + ".blockChain").Length != fSize)
+                {
+
+                }
                 bool dLog = query.Contains("-debug");
                 
                 List<Transaction> txs;
@@ -109,21 +117,30 @@ namespace CPU_Miner
                 nBlock.block_number = chain.chain.Count;
                 nBlock.calculateNonce(miner.publicKey, chain);
 
-                chain.AddBlock(nBlock);
-
-                if(!chain.validate())
+                fSize = new FileInfo(dir + ".blockChain").Length;
+                if (!chain.validate())
                 {
                     Console.WriteLine("Chain is invalid");
                     return;
-                }    
+                }
 
+                chain.AddBlock(nBlock);
                 File.WriteAllText(dir + ".blockChain", JsonConvert.SerializeObject(chain));
-
-            }catch(Exception e)
+                   
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Catched exception in mine method: " + e.Message);
             }
         }
+
+
+        static public void idle(string query)
+        {
+            for (; ; )
+                mine(query);
+        }
+
 
 
         public struct keySafe

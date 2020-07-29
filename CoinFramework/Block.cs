@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.IO;
+using System.Web.Security;
 
 namespace CoinFramework
 {
@@ -86,7 +87,6 @@ namespace CoinFramework
         public long block_number;
         public string nonce;
 
-        public bool mined = false;
         static SHA512 sha = SHA512.Create();
         byte[] _toHash() => sha.ComputeHash(ASCIIEncoding.ASCII.GetBytes(ToString()));
 
@@ -106,7 +106,7 @@ namespace CoinFramework
             }
             foreach(var tx in transactions)
             {
-                if (!tx.isValid(bc)) return false;
+                if (!tx.isValid(bc, block_number)) return false;
             }
             return true;
         }
@@ -114,28 +114,24 @@ namespace CoinFramework
         public void calculateNonce(byte[] _miner, Blockchain chain)
         {
             miner = _miner;
-            long tVal = 0;
             bool cond = true;
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             while (cond)
             {
-                tVal++;
-                nonce = tVal.ToString();
+                nonce = Membership.GeneratePassword(16, 0);
                 for (int i = 0; i < (block_number / Environment.diffReducer) + Environment.initialDifficulty; i++)
                 {
                     if (hash[i] != 0) goto _end;
                 }
                 
                 cond = false;
-                nonce = Convert.ToString(tVal);
                 Console.WriteLine("Found nonce: " + nonce);
             _end:;
             }
             stopWatch.Stop();
             Console.WriteLine("Found block after " + stopWatch.Elapsed.Hours + "h" + stopWatch.Elapsed.Minutes + "m" + stopWatch.Elapsed.Seconds + "s" + stopWatch.Elapsed.Milliseconds + "ms");
-            mined = true;
-            if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty, chain)) throw new Exception("Nonce was stopped before finishing");
+            //if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty, chain)) throw new Exception("Nonce was stopped before finishing");
         }
 
 

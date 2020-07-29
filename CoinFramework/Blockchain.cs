@@ -30,6 +30,21 @@ namespace CoinFramework
         }
 
 
+        public int numTransactions(byte[] address)
+        {
+            int st = 0;
+            foreach (var i in chain)
+            {
+                foreach (var x in i.transactions)
+                {
+                    if (Enumerable.SequenceEqual(x.sender, address))
+                        st++;
+                }
+            }
+            return st;
+        }
+
+
         /// <summary>
         /// Count the funds of $address.
         /// </summary>
