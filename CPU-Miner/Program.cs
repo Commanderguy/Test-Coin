@@ -53,21 +53,27 @@ namespace CPU_Miner
 
         private static void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            if (e.Name == ".LazyPool")
+            try
             {
-                List<Transaction> txs;
-                if (File.Exists(dir + ".LazyPool"))
+                if (e.Name == ".LazyPool")
                 {
-                    txs = JsonConvert.DeserializeObject<List<Transaction>>(File.ReadAllText(dir + ".LazyPool"));
-                    File.Delete(dir + ".LazyPool");
-                }
-                else
-                    txs = new List<Transaction>();
+                    List<Transaction> txs;
+                    if (File.Exists(dir + ".LazyPool"))
+                    {
+                        txs = JsonConvert.DeserializeObject<List<Transaction>>(File.ReadAllText(dir + ".LazyPool"));
+                        File.Delete(dir + ".LazyPool");
+                    }
+                    else
+                        txs = new List<Transaction>();
 
-                foreach (var x in txs)
-                {
-                    pool.addTx(x);
+                    foreach (var x in txs)
+                    {
+                        pool.addTx(x);
+                    }
                 }
+            }catch(Exception)
+            {
+
             }
         }
 
@@ -90,6 +96,7 @@ namespace CPU_Miner
 
         public static void mine(string query)
         {
+            Console.WriteLine("--------------------------------------------------------------");
             try
             {
                 if(new FileInfo(dir + ".blockChain").Length != fSize)

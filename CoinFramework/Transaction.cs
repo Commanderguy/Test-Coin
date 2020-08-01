@@ -187,17 +187,20 @@ namespace CoinFramework
                     }
                     goto End;
                 }
-                foreach(var x in bc.chain[i].transactions)
-                {
-                    if (num == x.num)
-                        return false;
-                }
+                
 
                 
             }
             End:
             // Verify the transaction with the public token
-            if (!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender)) { Console.WriteLine("isValid has found an invalid Transaction"); return false; }
+            if (!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender))
+            { 
+                Console.WriteLine("isValid has found an invalid Transaction");
+                Console.WriteLine("Transaction json: " + JsonConvert.SerializeObject( new _transaction(sender, receiver, value, num)));
+                Console.WriteLine("Transaction signature: " + JsonConvert.SerializeObject(signature));
+                Console.WriteLine("Transaction sender: " + JsonConvert.SerializeObject(sender));
+                return false; 
+            }
             return bc.count_funds(sender) > value;
         }
     }

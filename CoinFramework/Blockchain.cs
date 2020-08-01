@@ -22,9 +22,23 @@ namespace CoinFramework
         /// <returns></returns>
         public bool validate()
         {
+            bool fZero = false;
             for(int i = 0; i < chain.Count; i++)
             {
                 if (!chain[i].isValid((chain[i].block_number / Environment.diffReducer) + Environment.initialDifficulty, this)) return false;
+                /*if(fZero)
+                {
+                    if (chain[i].block_number == 0)
+                        return false;
+                    if(! Enumerable.SequenceEqual( chain[i].prev_hash,chain[i - 1].prev_hash))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    fZero = true;
+                }*/
             }
             return true;
         }

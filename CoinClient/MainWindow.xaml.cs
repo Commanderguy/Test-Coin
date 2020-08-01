@@ -131,11 +131,13 @@ namespace CoinClient
                 accName = accounts.First().Key;
                 File.WriteAllText(chainFolder + ".AccountList", Newtonsoft.Json.JsonConvert.SerializeObject(accounts));
             }
-
-            if(nChain)
-                ForgeNewChain();
-            Save();
             InitializeComponent();
+            new Thread(() =>
+            {
+                if (nChain)
+                    ForgeNewChain();
+                Save();
+            }).Start();
             SendButton.Content = "Send " + (string)Environment.CurrencyType + "s";
 
             

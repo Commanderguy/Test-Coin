@@ -119,7 +119,7 @@ namespace CoinFramework
             stopWatch.Start();
             while (cond)
             {
-                nonce = Membership.GeneratePassword(16, 0);
+                nonce = Membership.GeneratePassword(32, 0);
                 for (int i = 0; i < (block_number / Environment.diffReducer) + Environment.initialDifficulty; i++)
                 {
                     if (hash[i] != 0) goto _end;
@@ -131,7 +131,7 @@ namespace CoinFramework
             }
             stopWatch.Stop();
             Console.WriteLine("Found block after " + stopWatch.Elapsed.Hours + "h" + stopWatch.Elapsed.Minutes + "m" + stopWatch.Elapsed.Seconds + "s" + stopWatch.Elapsed.Milliseconds + "ms");
-            //if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty, chain)) throw new Exception("Nonce was stopped before finishing");
+            if (!isValid((block_number / Environment.diffReducer) + Environment.initialDifficulty, chain)) throw new Exception("Nonce was stopped before finishing");
         }
 
 
