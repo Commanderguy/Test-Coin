@@ -57,7 +57,6 @@ namespace CoinClient
                     txStatus st = new txStatus();
                     st.balance = stat;
                     st.block = i;
-                    Console.WriteLine("Added to series");
                 }
 
             }

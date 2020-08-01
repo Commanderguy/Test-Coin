@@ -33,11 +33,12 @@ namespace DigitalSignatureAlgo
             {
                 using (ECDsaCng algo = new ECDsaCng(CngKey.Import(publicKey, CngKeyBlobFormat.EccPublicBlob)))
                 {
-                    return algo.VerifyData(ASCIIEncoding.ASCII.GetBytes(msg), signature, HashAlgorithmName.SHA512);
+                    return algo.VerifyData(Encoding.ASCII.GetBytes(msg), signature, HashAlgorithmName.SHA512);
                 }
             }
-            catch (System.Security.Cryptography.CryptographicException)
+            catch (System.Security.Cryptography.CryptographicException e)
             {
+                System.Console.WriteLine("Cryptographic exception catched: " + e.Message);
                 return false;
             }
         }

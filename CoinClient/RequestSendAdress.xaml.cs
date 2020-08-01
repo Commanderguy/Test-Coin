@@ -48,6 +48,7 @@ namespace CoinClient
         private void ConfirmTx_Click(object sender, RoutedEventArgs e)
         {
             Transaction tx = new Transaction(publicKey, StringToByteArray(Rec.Text), Convert.ToDouble(Amount.Text), c.numTransactions(publicKey), privateKey);
+            Console.WriteLine("Added tran saction with num = " + c.numTransactions(publicKey));
             finished(tx);
         }
 

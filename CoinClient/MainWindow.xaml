@@ -6,7 +6,7 @@
         xmlns:sfc="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:CoinClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="BlockChain client" Height="450" Width="800"
         ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>

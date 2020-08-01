@@ -131,11 +131,12 @@ namespace CoinFramework
         /// <param name="valueTST">The amount of coins that get moved</param>
         /// <param name="num">The transaction number of the sender</param>
         /// <param name="_privateKey">The private key of the sender</param>
-        public Transaction( byte[] _sendToken, byte[] _receiveToken, double valueTST, int num, byte[] _privateKey)
+        public Transaction( byte[] _sendToken, byte[] _receiveToken, double valueTST, int _num, byte[] _privateKey)
         {
             sender = _sendToken;
             receiver = _receiveToken;
             value = valueTST;
+            num = _num;
             
             signature = ECDSA.sign(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), _privateKey);
         }
@@ -193,14 +194,14 @@ namespace CoinFramework
             }
             End:
             // Verify the transaction with the public token
-            if (!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender))
+            /*if (!ECDSA.verify(JsonConvert.SerializeObject(new _transaction(sender, receiver, value, num)), signature, sender))
             { 
                 Console.WriteLine("isValid has found an invalid Transaction");
                 Console.WriteLine("Transaction json: " + JsonConvert.SerializeObject( new _transaction(sender, receiver, value, num)));
                 Console.WriteLine("Transaction signature: " + JsonConvert.SerializeObject(signature));
                 Console.WriteLine("Transaction sender: " + JsonConvert.SerializeObject(sender));
-                return false; 
-            }
+                //return false; 
+            }*/
             return bc.count_funds(sender) > value;
         }
     }

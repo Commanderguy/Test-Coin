@@ -34,6 +34,7 @@ namespace CPU_Miner
             commands.Add("help", cmdHelp);
             commands.Add("mine", mine);
             commands.Add("idle", idle);
+            commands.Add("validate", Validate);
             try
             {
                 for (; ; )
@@ -97,6 +98,8 @@ namespace CPU_Miner
         public static void mine(string query)
         {
             Console.WriteLine("--------------------------------------------------------------");
+
+
             try
             {
                 if(new FileInfo(dir + ".blockChain").Length != fSize)
@@ -120,6 +123,9 @@ namespace CPU_Miner
                 }
 
                 Block nBlock = pool.ForgeBlock();
+
+                
+
                 nBlock.prev_hash = chain.getLastHash();
                 nBlock.block_number = chain.chain.Count;
                 nBlock.calculateNonce(miner.publicKey, chain);
@@ -139,6 +145,12 @@ namespace CPU_Miner
             {
                 Console.WriteLine("Catched exception in mine method: " + e.Message);
             }
+        }
+
+
+        static public void Validate(string query)
+        {
+            chain.validate();
         }
 
 
