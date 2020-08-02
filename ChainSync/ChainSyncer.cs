@@ -68,6 +68,11 @@ namespace ChainSync
             return;
         }
 
+        public void Stop()
+        {
+            NetworkComms.CloseAllConnections();
+        }
+
         private void T_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             working = false;
@@ -76,10 +81,13 @@ namespace ChainSync
 
         public void BackgroundRun()
         {
-            foreach(var x in _handler.Peers.Peers)
+            Task.Run(() =>
             {
-                NetworkComms.SendObject<int>("SendChain", x.Ip, x.Port, _chain.chain.Count + 1);
-            }
+                foreach (var x in _handler.Peers.Peers)
+                {
+                    NetworkComms.SendObject<int>("SendChain", x.Ip, x.Port, _chain.chain.Count + 1);
+                }
+            });
         }
 
     }
@@ -92,10 +100,12 @@ namespace ChainSync
 
     public class ChainSyncer
     {
+        lookFor lookup;
         Blockchain _chain;
 
         public ChainSyncer(Blockchain chain, string Folder)
         {
+            lookup = new lookFor(chain, handler);
             handler = new PeerHandler(Folder);
             _chain = chain;
             Task.Run(() =>
@@ -103,6 +113,7 @@ namespace ChainSync
                 NetworkComms.AppendGlobalIncomingPacketHandler<int>("SendChain", AcceptSend);
                 NetworkComms.AppendGlobalIncomingPacketHandler<PeerList>("SendPeers", AcceptPeers);
             });
+            lookup.BackgroundRun();
         }
 
         public void AcceptSend(PacketHeader header, Connection connection, int msg)
@@ -121,6 +132,11 @@ namespace ChainSync
         public void AcceptPeers(PacketHeader header, Connection connection, PeerList newPeers)
         {
             handler.AddList(newPeers);
+        }
+
+        ~ChainSyncer()
+        {
+            lookup.Stop();
         }
         
     }

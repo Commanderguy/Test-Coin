@@ -178,6 +178,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChainSync\ChainSync.csproj">
+      <Project>{0f2892b2-927a-443c-bfe1-98c4301c8698}</Project>
+      <Name>ChainSync</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">
       <Project>{61ba1a19-cefd-45a2-a3cd-b61c6b41635e}</Project>
       <Name>CoinFramework</Name>

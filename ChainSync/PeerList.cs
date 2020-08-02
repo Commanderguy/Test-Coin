@@ -99,7 +99,7 @@ namespace ChainSync
 
         ~PeerHandler()
         {
-            File.WriteAllText(_folder, JsonConvert.SerializeObject(Peers));
+            File.WriteAllText(_folder + ".peers", JsonConvert.SerializeObject(Peers));
         }
     }
 }

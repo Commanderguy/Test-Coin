@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CPU_Miner
@@ -72,6 +73,11 @@ namespace CPU_Miner
                         pool.addTx(x);
                     }
                 }
+                if(e.Name == ".blockChain")
+                {
+                    //st = false;
+                    //mine("");
+                }
             }catch(Exception)
             {
 
@@ -94,17 +100,16 @@ namespace CPU_Miner
         }
         
         static LazyPool pool = new LazyPool();
-
+        static bool st = true;
         public static void mine(string query)
         {
-            Console.WriteLine("--------------------------------------------------------------");
-            Console.WriteLine("Started mining at " + DateTime.Now.ToString("HH:mm:ss"));
-
+            st = true;
+            
             try
             {
                 if(new FileInfo(dir + ".blockChain").Length != fSize)
                 {
-
+                    //chain = Newtonsoft.Json.JsonConvert.DeserializeObject<Blockchain>(File.ReadAllText(dir + ".blockChain"));
                 }
                 bool dLog = query.Contains("-debug");
                 
@@ -128,7 +133,8 @@ namespace CPU_Miner
 
                 nBlock.prev_hash = chain.getLastHash();
                 nBlock.block_number = chain.chain.Count;
-                nBlock.calculateNonce(miner.publicKey, chain);
+                
+                nBlock.calculateNonce(miner.publicKey, chain, ref st);
 
                 fSize = new FileInfo(dir + ".blockChain").Length;
                 if (!chain.validate())

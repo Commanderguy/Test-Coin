@@ -111,13 +111,13 @@ namespace CoinFramework
             return true;
         }
 
-        public void calculateNonce(byte[] _miner, Blockchain chain)
+        public void calculateNonce(byte[] _miner, Blockchain chain, ref bool stop)
         {
             miner = _miner;
-            bool cond = true;
+            
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            while (cond)
+            while (stop)
             {
                 nonce = Membership.GeneratePassword(32, 0);
                 for (int i = 0; i < (block_number / Environment.diffReducer) + Environment.initialDifficulty; i++)
@@ -125,7 +125,7 @@ namespace CoinFramework
                     if (hash[i] != 0) goto _end;
                 }
                 
-                cond = false;
+                stop = false;
                 Console.WriteLine("Found nonce: " + nonce);
             _end:;
             }

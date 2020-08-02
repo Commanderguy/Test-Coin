@@ -6,7 +6,7 @@ namespace CoinFramework
     public class Environment
     {
         public const long diffReducer = 50000;
-        public const long initialDifficulty = 3;
+        public const long initialDifficulty = 2;
         public const long InitialCoinPerBlock = 50;
         public const long MaxTransactionsPerBlock = 5000;
         public const long MaxMessageSize = 256;

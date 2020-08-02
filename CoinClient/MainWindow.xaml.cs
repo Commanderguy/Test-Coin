@@ -146,8 +146,13 @@ namespace CoinClient
 
             watcher.EnableRaisingEvents = true;
             watcher.Changed += Watcher_Changed;
-        }
 
+
+            //syncer = new ChainSync.ChainSyncer(chain, chainFolder);
+
+
+        }
+        ChainSync.ChainSyncer syncer;
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             try
@@ -187,14 +192,16 @@ namespace CoinClient
 
         Dictionary<string, AccountView> accounts;
 
+        bool nSTop = true;
 
         public void ForgeNewChain()
         {
-            Block b = new CoinFramework.Block();
+            Block b = new Block();
             b.prev_hash = null;
             b.block_number = 0;
             b.miner = current.publicKey;
-            b.calculateNonce(current.publicKey, chain);
+
+            b.calculateNonce(current.publicKey, chain, ref nSTop);
             chain.AddBlock(b);
         }
 
