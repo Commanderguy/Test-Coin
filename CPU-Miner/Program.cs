@@ -98,7 +98,7 @@ namespace CPU_Miner
         public static void mine(string query)
         {
             Console.WriteLine("--------------------------------------------------------------");
-
+            Console.WriteLine("Started mining at " + DateTime.Now.ToString("HH:mm:ss"));
 
             try
             {

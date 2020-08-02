@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinClient", "CoinClient\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPU-Miner", "CPU-Miner\CPU-Miner.csproj", "{C9EC2E61-7AAB-459B-957F-C97D55FC27F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkCommsDotNet", "..\..\..\source\repos\NetworkComms.Net\NetworkCommsDotNet\NetworkCommsDotNet.csproj", "{7DB00305-F5ED-4545-9D83-542132C8177E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{C9EC2E61-7AAB-459B-957F-C97D55FC27F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9EC2E61-7AAB-459B-957F-C97D55FC27F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9EC2E61-7AAB-459B-957F-C97D55FC27F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DB00305-F5ED-4545-9D83-542132C8177E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DB00305-F5ED-4545-9D83-542132C8177E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DB00305-F5ED-4545-9D83-542132C8177E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DB00305-F5ED-4545-9D83-542132C8177E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

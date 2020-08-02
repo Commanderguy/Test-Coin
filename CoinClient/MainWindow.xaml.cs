@@ -301,7 +301,7 @@ namespace CoinClient
 
         private void InspAcc_Click(object sender, RoutedEventArgs e)
         {
-            this.NotImplMessage("Inspect account");
+            
         }
 
         private void Label_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,13 +45,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChainSyncer.cs" />
+    <Compile Include="PeerList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\source\repos\NetworkComms.Net\NetworkCommsDotNet\NetworkCommsDotNet.csproj">
+      <Project>{7db00305-f5ed-4545-9d83-542132c8177e}</Project>
+      <Name>NetworkCommsDotNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinFramework\CoinFramework.csproj">
       <Project>{61BA1A19-CEFD-45A2-A3CD-B61C6B41635E}</Project>
       <Name>CoinFramework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

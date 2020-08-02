@@ -74,7 +74,7 @@ namespace CoinClient
 
         private void onAddContact(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void OpenSendDialogue(byte[] pubToken, string name)
