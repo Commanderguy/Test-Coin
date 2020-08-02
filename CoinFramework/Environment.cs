@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace CoinFramework
 {
     public class Environment
@@ -10,5 +12,7 @@ namespace CoinFramework
         public const long MaxMessageSize = 256;
         public const int TimeBetweenNodeConnections = 10000;
         public const int DefaultPort = 12975;
+        public const int TimeBetweenDiscovery = 1000;
+        public const int TrustBlocks = 5;
     }
 }

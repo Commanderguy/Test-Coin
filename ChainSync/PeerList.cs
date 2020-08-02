@@ -47,8 +47,10 @@ namespace ChainSync
     public class PeerHandler
     {
         public PeerList Peers = new PeerList();
+        private string _folder;
         public PeerHandler(string folder)
         {
+            _folder = folder;
             if (File.Exists(folder + ".peers"))
                 Peers = JsonConvert.DeserializeObject<PeerList>(folder + ".peers");
 
@@ -97,7 +99,7 @@ namespace ChainSync
 
         ~PeerHandler()
         {
-
+            File.WriteAllText(_folder, JsonConvert.SerializeObject(Peers));
         }
     }
 }
