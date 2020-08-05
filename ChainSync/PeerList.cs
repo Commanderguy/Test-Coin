@@ -34,6 +34,21 @@ namespace ChainSync
         {
             return one.Ip != other.Ip && one.Port != other.Port;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Peer peer &&
+                   Ip == peer.Ip &&
+                   Port == peer.Port;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -14871390;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Ip);
+            hashCode = hashCode * -1521134295 + Port.GetHashCode();
+            return hashCode;
+        }
     }
 
 
@@ -52,7 +67,7 @@ namespace ChainSync
         {
             _folder = folder;
             if (File.Exists(folder + ".peers"))
-                Peers = JsonConvert.DeserializeObject<PeerList>(folder + ".peers");
+                Peers = JsonConvert.DeserializeObject<PeerList>(File.ReadAllText(folder + ".peers"));
 
         }
         private Random _rand = new Random();

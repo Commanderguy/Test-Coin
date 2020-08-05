@@ -148,7 +148,7 @@ namespace CoinClient
             watcher.Changed += Watcher_Changed;
 
 
-            //syncer = new ChainSync.ChainSyncer(chain, chainFolder);
+            syncer = new ChainSync.ChainSyncer(chain, chainFolder);
 
 
         }
